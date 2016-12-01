@@ -65,6 +65,11 @@
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-themes</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.vaadin.embedded</groupId>
+            <artifactId>embedded-ui</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
     <build>

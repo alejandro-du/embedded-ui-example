@@ -1,44 +1,40 @@
 package org.test;
 
-import javax.servlet.annotation.WebServlet;
-
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
+import com.vaadin.ui.themes.ValoTheme;
+
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import javax.servlet.annotation.WebListener;
+import javax.servlet.annotation.WebServlet;
 
 /**
- * This UI is the application entry point. A UI may either represent a browser window 
- * (or tab) or some part of a html page where a Vaadin application is embedded.
- * <p>
- * The UI is initialized using {@link #init(VaadinRequest)}. This method is intended to be 
- * overridden to add component to the user interface and initialize non-component functionality.
+ * @author Alejandro Duarte
  */
-@Theme("mytheme")
+@Theme(ValoTheme.THEME_NAME)
 public class EmbeddedUI2 extends UI {
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
         final VerticalLayout layout = new VerticalLayout();
-        
+
         final TextField name = new TextField();
         name.setCaption("Type your name here:");
 
         Button button = new Button("Click Me");
-        button.addClickListener( e -> {
-            layout.addComponent(new Label("Thanks " + name.getValue() 
+        button.addClickListener(e -> {
+            layout.addComponent(new Label("Thanks " + name.getValue()
                     + ", it works!"));
         });
-        
+
         layout.addComponents(name, button);
         layout.setMargin(true);
         layout.setSpacing(true);
-        
+
         setContent(layout);
     }
 
@@ -46,4 +42,19 @@ public class EmbeddedUI2 extends UI {
     @VaadinServletConfiguration(ui = EmbeddedUI2.class, productionMode = false)
     public static class MyUIServlet extends VaadinServlet {
     }
+
+    @WebListener
+    public static class SessionCookieConfigListener implements ServletContextListener {
+
+        @Override
+        public void contextInitialized(ServletContextEvent event) {
+            event.getServletContext().getSessionCookieConfig().setName("ui1-session-id");
+        }
+
+        @Override
+        public void contextDestroyed(ServletContextEvent event) {
+
+        }
+    }
+
 }

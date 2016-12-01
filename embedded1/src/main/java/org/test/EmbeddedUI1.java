@@ -1,49 +1,82 @@
 package org.test;
 
-import javax.servlet.annotation.WebServlet;
-
+import com.thetransactioncompany.cors.CORSFilter;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
+import org.vaadin.crudui.crud.CrudListener;
+import org.vaadin.crudui.crud.impl.GridBasedCrudComponent;
+
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import javax.servlet.annotation.WebListener;
+import javax.servlet.annotation.WebServlet;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
- * This UI is the application entry point. A UI may either represent a browser window 
- * (or tab) or some part of a html page where a Vaadin application is embedded.
- * <p>
- * The UI is initialized using {@link #init(VaadinRequest)}. This method is intended to be 
- * overridden to add component to the user interface and initialize non-component functionality.
+ * @author Alejandro Duarte
  */
-@Theme("mytheme")
-public class EmbeddedUI1 extends UI {
+@Theme(ValoTheme.THEME_NAME)
+public class EmbeddedUI1 extends UI implements CrudListener<User> {
+
+    private static Set<User> users = new LinkedHashSet<>();
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
-        final VerticalLayout layout = new VerticalLayout();
-        
-        final TextField name = new TextField();
-        name.setCaption("Type your name here:");
+        GridBasedCrudComponent<User> crud = new GridBasedCrudComponent<>(User.class);
+        crud.setCrudListener(this);
 
-        Button button = new Button("Click Me");
-        button.addClickListener( e -> {
-            layout.addComponent(new Label("Thanks " + name.getValue() 
-                    + ", it works!"));
-        });
-        
-        layout.addComponents(name, button);
+        VerticalLayout layout = new VerticalLayout(crud);
+        layout.setSizeFull();
         layout.setMargin(true);
         layout.setSpacing(true);
-        
         setContent(layout);
+    }
+
+    @Override
+    public Collection<User> findAll() {
+        return users;
+    }
+
+    @Override
+    public User add(User user) {
+        users.add(user);
+        return user;
+    }
+
+    @Override
+    public User update(User user) {
+        return user;
+    }
+
+    @Override
+    public void delete(User user) {
+        users.remove(user);
     }
 
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
     @VaadinServletConfiguration(ui = EmbeddedUI1.class, productionMode = false)
     public static class MyUIServlet extends VaadinServlet {
     }
+
+    @WebListener
+    public static class SessionCookieConfigListener implements ServletContextListener {
+
+        @Override
+        public void contextInitialized(ServletContextEvent event) {
+            event.getServletContext().getSessionCookieConfig().setName("ui1-session-id");
+        }
+
+        @Override
+        public void contextDestroyed(ServletContextEvent event) {
+
+        }
+    }
+
 }
