@@ -2,6 +2,7 @@ package org.test;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
@@ -24,6 +25,9 @@ public class EmbeddedUI1 extends UI implements CrudListener<User> {
     protected void init(VaadinRequest vaadinRequest) {
         GridBasedCrudComponent<User> crud = new GridBasedCrudComponent<>(User.class);
         crud.setCrudListener(this);
+        crud.getGrid().setColumns("name", "email", "birthDate", "password", "active");
+        crud.getCrudFormFactory().setVisiblePropertyIds("name", "email", "birthDate", "password", "active");
+        crud.getCrudFormFactory().setFieldType("password", PasswordField.class);
 
         VerticalLayout layout = new VerticalLayout(crud);
         layout.setSizeFull();
