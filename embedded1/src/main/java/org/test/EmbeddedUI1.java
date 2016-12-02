@@ -1,20 +1,13 @@
 package org.test;
 
-import com.thetransactioncompany.cors.CORSFilter;
 import com.vaadin.annotations.Theme;
-import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import org.vaadin.crudui.crud.CrudListener;
 import org.vaadin.crudui.crud.impl.GridBasedCrudComponent;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.annotation.WebListener;
-import javax.servlet.annotation.WebServlet;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -58,25 +51,6 @@ public class EmbeddedUI1 extends UI implements CrudListener<User> {
     @Override
     public void delete(User user) {
         users.remove(user);
-    }
-
-    @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
-    @VaadinServletConfiguration(ui = EmbeddedUI1.class, productionMode = false)
-    public static class MyUIServlet extends VaadinServlet {
-    }
-
-    @WebListener
-    public static class SessionCookieConfigListener implements ServletContextListener {
-
-        @Override
-        public void contextInitialized(ServletContextEvent event) {
-            event.getServletContext().getSessionCookieConfig().setName("ui1-session-id");
-        }
-
-        @Override
-        public void contextDestroyed(ServletContextEvent event) {
-
-        }
     }
 
 }

@@ -1,16 +1,9 @@
 package org.test;
 
 import com.vaadin.annotations.Theme;
-import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.annotation.WebListener;
-import javax.servlet.annotation.WebServlet;
 
 /**
  * @author Alejandro Duarte
@@ -36,25 +29,6 @@ public class EmbeddedUI2 extends UI {
         layout.setSpacing(true);
 
         setContent(layout);
-    }
-
-    @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
-    @VaadinServletConfiguration(ui = EmbeddedUI2.class, productionMode = false)
-    public static class MyUIServlet extends VaadinServlet {
-    }
-
-    @WebListener
-    public static class SessionCookieConfigListener implements ServletContextListener {
-
-        @Override
-        public void contextInitialized(ServletContextEvent event) {
-            event.getServletContext().getSessionCookieConfig().setName("ui1-session-id");
-        }
-
-        @Override
-        public void contextDestroyed(ServletContextEvent event) {
-
-        }
     }
 
 }
